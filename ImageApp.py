@@ -68,13 +68,6 @@ section[data-testid="stSidebar"] .css-1d391kg {
 """
 
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
-with st.sidebar:
-    st.markdown(
-        "<div style='display:flex;align-items:center;gap:10px'><div class='logo-circle'>IApp</div><div><h3 style='margin:0'>ImageApp</h3><div style='font-size:12px;color:gray'>TensorFlow · Sklearn · Explainability</div></div></div>",
-        unsafe_allow_html=True)
-    st.markdown("------")
-    st.markdown("**Quick Settings**")
-    st.markdown("-------")
 
 st.write("Know which Image you Uploaded")
 st.markdown("--------")
@@ -83,18 +76,26 @@ st.write(
 )
 st.markdown("---------")
 col1, col2 = st.columns([2, 1])
+with st.sidebar:
+    st.markdown(
+        "<div style='display:flex;align-items:center;gap:10px'><div class='logo-circle'>IApp</div><div><h3 style='margin:0'>ImageApp</h3><div style='font-size:12px;color:gray'>TensorFlow · Sklearn · Explainability</div></div></div>",
+        unsafe_allow_html=True)
+    st.markdown("------")
+    st.markdown("**Quick Settings**")
+    st.markdown("-------")
 
-uploaded = st.file_uploader("Upload an Image here", type=['png', 'jpeg', 'jpg'])
+    uploaded = st.file_uploader("Upload an Image here", type=['png', 'jpeg', 'jpg'])
 
-if uploaded:
-    file_bytes = np.asarray(bytearray(uploaded.read()), dtype=np.uint8)
-    img = cv2.imdecode(file_bytes, 1)
-    img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    if uploaded:
+        file_bytes = np.asarray(bytearray(uploaded.read()), dtype=np.uint8)
+        img = cv2.imdecode(file_bytes, 1)
+        img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
     # on the main page
 
     with col1:
         st.image(img_rgb, use_column_width=True)
+
     img_resized = cv2.resize(img_rgb, (32, 32))
     img_input = np.expand_dims(img_resized / 255.0, axis=0)
 
@@ -105,8 +106,3 @@ if uploaded:
     with col2:
         st.write("Image Name :gear:")
         st.success(f"Prediction: **{predict_class}**")
-else:
-    with col1:
-        st.info("Unload an image to continue")
-
-
