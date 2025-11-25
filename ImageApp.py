@@ -1,5 +1,10 @@
+import urllib
+import cv2
 import streamlit as st
 import tensorflow as tf
+import matplotlib.pyplot as plt
+import numpy as np
+
 
 model = tf.keras.models.load_model("model.h5")
 
@@ -73,20 +78,26 @@ with st.sidebar:
     st.markdown("------")
     st.markdown("**Quick Settings**")
     st.markdown("-------")
-    st.file_uploader("Upload an Image here")
 
 # on the main page
 
-st.markdown("--------")
+
 st.write("Know which Image you Uploaded")
+st.markdown("--------")
 st.write(
-    ":dog: Try uploading an image to see the name of the Image. This code is open source and available [here](https://github.com/Brian342/ImageClassification) on GitHub :grin:"
+    "Try uploading an image to see the name of the Image. This code is open source and available [here](https://github.com/Brian342/ImageClassification) on GitHub"
 )
 st.markdown("---------")
 col1, col2 = st.columns([2, 1])
 
 with col1:
     st.write("uploaded Image :camera:")
+    plt.imshow()
+    plt.xticks([])
+    plt.yticks([])
+    plt.grid = False
+    plt.show()
+
 with col2:
     st.write("Image Name :gear:")
-    model.predict()
+    # model.predict()
