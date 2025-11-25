@@ -74,3 +74,13 @@ with st.sidebar:
     st.markdown("**Quick Settings**")
     st.markdown("-------")
     st.file_uploader("Upload an Image here")
+
+# on the main page
+
+st.markdown("--------")
+st.write("Know which Image you Uploaded")
+st.write(
+    ":dog: Try uploading an image to see the name of the Image. This code is open source and available [here](https://github.com/Brian342/ImageClassification) on GitHub:grin:"
+)
+st.markdown("---------")
+col1, col2 = st.columns()
