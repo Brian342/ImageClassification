@@ -85,6 +85,12 @@ with st.sidebar:
             """
         )
     st.markdown("-------")
+    uploaded = st.file_uploader("Upload an Image here", type=['png', 'jpeg', 'jpg'])
+Class_name = [
+    'airplane', 'automobile', 'bird',
+    'cat', 'deer', 'dog', 'frog', 'horse',
+    'ship', 'truck'
+]
 
 st.write("Know which Image you Uploaded")
 st.markdown("--------")
@@ -92,30 +98,36 @@ st.write(
     "Try uploading an image to see the name of the Image. This code is open source and available [here](https://github.com/Brian342/ImageClassification) on GitHub"
 )
 st.markdown("---------")
-col1, col2 = st.columns([2, 1])
+st.info("Unload an image to continue")
 
-uploaded = st.file_uploader("Upload an Image here", type=['png', 'jpeg', 'jpg'])
+col1, col2 = st.columns([2, 0.5])
+
+with col1:
+    st.write("uploaded Image :camera:")
+with col2:
+    st.write("Image Name :gear:")
 
 if uploaded:
-    file_bytes = np.asarray(bytearray(uploaded.read()), dtype=np.uint8)
-    img = cv2.imdecode(file_bytes, 1)
-    img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    try:
+        file_bytes = np.frombuffer(uploaded.read(), dtype=np.uint8)
+        img = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+        img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-    with col1:
-        st.write("uploaded Image :camera:")
-        st.image(img_rgb, use_column_width=True)
+        with col1:
+            st.image(img_rgb, use_column_width=True)
+        img_resized = cv2.resize(img_rgb, (32, 32))
+        img_input = np.expand_dims(img_resized / 255.0, axis=0)
 
-    img_resized = cv2.resize(img_rgb, (32, 32))
-    img_input = np.expand_dims(img_resized / 255.0, axis=0)
+        # model predicts
+        with st.spinner("Analysing your Image"):
+            predict = model.predict(img_input)
+            class_id = int(np.argmax(predict))
+            # predict_class = np.argmax(predict)
+            class_name = Class_name[class_id]
+            confidence = predict[0][class_id]
 
-# model predicts
-    predict = model.predict(img_input)
-    predict_class = np.argmax(predict)
+        with col2:
+            st.success(f"Prediction: **{predict_class}**")
 
-    with col2:
-        st.write("Image Name :gear:")
-        st.success(f"Prediction: **{predict_class}**")
-
-else:
-    with col1:
-        st.info("Unload an image to continue")
+    except Exception as e:
+        st.error(f"Something went wrong{e}")
