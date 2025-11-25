@@ -89,3 +89,4 @@ with col1:
     st.write("uploaded Image :camera:")
 with col2:
     st.write("Image Name :gear:")
+    model.predict()
