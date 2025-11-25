@@ -80,7 +80,12 @@ with st.sidebar:
 st.markdown("--------")
 st.write("Know which Image you Uploaded")
 st.write(
-    ":dog: Try uploading an image to see the name of the Image. This code is open source and available [here](https://github.com/Brian342/ImageClassification) on GitHub:grin:"
+    ":dog: Try uploading an image to see the name of the Image. This code is open source and available [here](https://github.com/Brian342/ImageClassification) on GitHub :grin:"
 )
 st.markdown("---------")
-col1, col2 = st.columns()
+col1, col2 = st.columns([2, 1])
+
+with col1:
+    st.write("uploaded Image :camera:")
+with col2:
+    st.write("Image Name :gear:")
