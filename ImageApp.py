@@ -107,15 +107,19 @@ with col1:
 with col2:
     st.write("Image Name :gear:")
 
-if uploaded:
+if uploaded is not None:
     try:
-        file_bytes = np.frombuffer(uploaded.read(), dtype=np.uint8)
+        file_bytes = np.frombuffer(uploaded.read(), np.uint8)
         img = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
-        img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        if img is None:
+            st.error("Image cannot be decoded. Try another file please")
+        else:
+            st.image(img, channels="BGR", caption="Uploaded Image")
 
         with col1:
-            st.image(img_rgb, use_column_width=True)
-        img_resized = cv2.resize(img_rgb, (32, 32))
+            st.image(img, use_column_width=True)
+
+        img_resized = cv2.resize(img, (32, 32))
         img_input = np.expand_dims(img_resized / 255.0, axis=0)
 
         # model predicts
@@ -127,7 +131,7 @@ if uploaded:
             confidence = predict[0][class_id]
 
         with col2:
-            st.success(f"Prediction: **{predict_class}**")
+            st.success(f"Prediction: **({confidence*100:.2f}% Confidence)**")
 
     except Exception as e:
         st.error(f"Something went wrong{e}")
